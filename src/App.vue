@@ -4,8 +4,23 @@
     <router-link to="/">Home</router-link> |
     <router-link to="/about">About</router-link>
   </nav>
-  <router-view />
+  <CreateLobby />
+  <br>
+  <JoinLobby />
 </template>
+
+<script lang="ts">
+import CreateLobby from '@/components/CreateLobby.vue';
+import JoinLobby from '@/components/JoinLobby.vue';
+
+export default {
+  components: {
+    CreateLobby,
+    JoinLobby
+  },
+  // Component logic here
+}
+</script>
 
 <style>
 #app {
