@@ -18,18 +18,18 @@
 <script lang="ts">
 
 import { defineComponent } from 'vue';
-import { Player, PLAYERCOLOR } from "../model/Player";
+import { Player } from "../model/Player";
 
 export default defineComponent({
 
   data() {
     return {
       players: [
-        { name: "Player1", id: "Player1", color: PLAYERCOLOR.GREEN },
-        { name: "Player2", id: "Player2", color: PLAYERCOLOR.BLUE },
-        { name: "Player3", id: "Player3", color: PLAYERCOLOR.ORANGE },
-        { name: "Player4", id: "Player4", color: PLAYERCOLOR.PURPLE },
-        { name: "Player5", id: "Player5", color: PLAYERCOLOR.YELLOW }
+        { name: "Player1", id: "Player1" },
+        { name: "Player2", id: "Player2" },
+        { name: "Player3", id: "Player3" },
+        { name: "Player4", id: "Player4" },
+        { name: "Player5", id: "Player5" }
       ] as Player[],
       smokes: [
         { place: '', pic1: '', pic2: null, description: null }, //first need to be blank
