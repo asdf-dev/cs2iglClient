@@ -1,24 +1,91 @@
 <template>
-  <nav>
-    this is app.vue
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
+  <nav class="nav-container">
+    <div class="nav-content">
+      <div v-if="isLobbyPath" id="lobbyCode">
+        <input readonly id="inputCode" value="Render lobby code" />
+        <button id="lobbyCopyBtn" @click="copyLobbyToClipboard">Copy</button>
+        <router-link class="navSpace" to="/">Home</router-link>
+      </div>
+      <div v-else id="createLobby">
+        <!-- <button id="CreateLobbyBtn" @click="createLobby()">CreateLobby</button> -->
+      </div>
+    </div>
   </nav>
-  <CreateLobby />
-  <br>
-  <JoinLobby />
+  <div>
+    <DialogBox :isOpen="dialogOpen" @closeDialog="closeDialog" />
+  </div>
+  <router-view></router-view>
 </template>
 
 <script lang="ts">
-import CreateLobby from '@/components/CreateLobby.vue';
-import JoinLobby from '@/components/JoinLobby.vue';
+import DialogBox from "./components/dialogBox.vue"
+import { ref, onMounted, computed } from "vue"
+import { useRoute } from 'vue-router';
+
+
 
 export default {
   components: {
-    CreateLobby,
-    JoinLobby
+    DialogBox
   },
-  // Component logic here
+
+  setup() {
+    const dialogOpen = ref(false);
+    const username = ref<string | null>(null);
+    const route = useRoute();
+
+
+    onMounted(() => {
+      // Check if the "username" key exists in local storage
+      if (!localStorage.getItem('username')) {
+        //username.value = localStorage.getItem('username');
+        console.log("missing username");
+        openDialog();
+      }
+    });
+
+    const isLobbyPath = computed(() => {
+      return route.path.includes('lobby');
+    });
+
+    const openDialog = () => {
+      dialogOpen.value = true;
+    };
+
+    const closeDialog = () => {
+      dialogOpen.value = false;
+    };
+
+    return {
+      dialogOpen,
+      openDialog,
+      closeDialog,
+      username,
+      isLobbyPath
+    };
+  },
+  methods: {
+
+    createLobby() {
+      console.log("creating lobby")
+    },
+    showCreateLobby() {
+      return false;
+    },
+
+    async copyLobbyToClipboard() {
+      const inputCodeElement = document.querySelector<HTMLInputElement>('#inputCode');
+      if (inputCodeElement) {
+        inputCodeElement.select();
+        try {
+          document.execCommand('copy');
+        } catch (err) {
+          alert('Unable to copy code');
+        }
+        window.getSelection()?.removeAllRanges();
+      }
+    }
+  },
 }
 </script>
 
@@ -28,5 +95,20 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
+}
+
+.nav-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.nav-content {
+  display: flex;
+  align-items: center;
+}
+
+.navSpace {
+  margin-left: 10px;
 }
 </style>

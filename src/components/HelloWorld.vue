@@ -1,17 +1,21 @@
 <template>
   <div>
-    hello world
+    <CreateLobby />
+    <br>
+    <JoinLobby />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import CreateLobby from './CreateLobby.vue';
+import JoinLobby from './JoinLobby.vue';
 
 export default defineComponent({
-  name: 'HelloWorld',
-  props: {
-    msg: String,
-  },
+  components: {
+    JoinLobby,
+    CreateLobby
+  }
 });
 </script>
 

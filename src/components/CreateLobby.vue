@@ -1,7 +1,7 @@
 <template>
     <div id="JoinLobby">
         <form>
-            <button id="JoinLobbyButton">Create</button> -> Kald rest -> få id -> lobby
+            <button id="CreateLobby" @click="CreateLobby()">Create</button> -> Kald rest -> få id -> lobby
         </form>
     </div>
 </template>
@@ -11,7 +11,11 @@ import { defineComponent } from 'vue';
 
 
 export default defineComponent({
-
+    methods: {
+        CreateLobby() {
+            console.log("create lobby")
+        }
+    }
 
 });
 </script>
