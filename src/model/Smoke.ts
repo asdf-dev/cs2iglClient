@@ -4,7 +4,7 @@ export interface Smoke {
   team: TEAM;
   place: string;
   description: string;
-  version: string; //benyttes til kontrol imod cahce
+  fullpath: string;
 }
 
 export enum TEAM {

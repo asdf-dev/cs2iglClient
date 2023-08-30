@@ -1,25 +1,41 @@
 <template>
   <div id="JoinLobby">
-    <input id="JoinLobbyInput" type="text"><button @click="joinLobby()" id="JoinLobbyButton">Join</button> -- Kald rest
-    -> ok -> join lobby
-    /kode
+    <input id="JoinLobbyInput" type="text" v-model="inputValue"><button @click="joinLobby()"
+      id="JoinLobbyButton">Join</button>
   </div>
 </template>
   
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { fetchData } from '@/service/dataService'
+import { defineComponent, ref } from 'vue';
+import { joinLobby } from '@/service/dataService'
+import { connect } from '@/service/WSDataService'
+import { useRouter } from 'vue-router';
 
 export default defineComponent({
 
+  setup() {
+    const inputValue = ref('');
+    const router = useRouter();
+
+    return {
+      inputValue,
+      router
+    }
+  },
   methods: {
     async joinLobby() {
-      console.log("joinLobby")
       try {
-        let data = await fetchData()
-        //show error dialog if no lobby is found
+        //handle empty value
+        if (this.inputValue.length == 0) {
+          return
+        }
+        await joinLobby(this.inputValue);
+        connect(this.inputValue)
+        this.router.push('/lobby');
+
       } catch (error) {
         //show error dialog
+        console.error(error)
       }
     }
   },

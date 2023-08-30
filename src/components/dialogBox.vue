@@ -8,6 +8,7 @@
 </template>
   
 <script lang="ts">
+import { createUser } from '@/service/dataService';
 import { ref, watch } from 'vue';
 
 export default {
@@ -15,7 +16,7 @@ export default {
         isOpen: Boolean,
     },
 
-    setup(props) {
+    setup(props: any) {
         const inputValue = ref('');
         const dialogVisible = ref(props.isOpen);
 
@@ -23,7 +24,12 @@ export default {
             dialogVisible.value = newValue;
         });
         const setUsername = () => {
-            localStorage.setItem('username', inputValue.value);
+
+            const resp = createUser(inputValue.value)
+            resp.then(value => {
+                localStorage.setItem('id', value.id);
+                localStorage.setItem('username', value.name);
+            })
             dialogVisible.value = false;
         };
 

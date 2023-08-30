@@ -1,19 +1,34 @@
 <template>
     <div id="JoinLobby">
-        <form>
-            <button id="CreateLobby" @click="CreateLobby()">Create</button> -> Kald rest -> få id -> lobby
-        </form>
+        <button id="CreateLobbyBtn" @click="CreateLobby()">Create</button>
     </div>
 </template>
   
 <script lang="ts">
+import { createLobby } from '@/service/dataService';
 import { defineComponent } from 'vue';
+import { connect } from '@/service/WSDataService';
+import { useRouter } from 'vue-router';
 
 
 export default defineComponent({
+    setup() {
+        const router = useRouter();
+
+        return {
+            router
+        }
+    },
+
     methods: {
         CreateLobby() {
-            console.log("create lobby")
+            const username = localStorage.getItem('username');
+            const resp = createLobby();
+            //tag lobby id og navigate til lobby
+            resp.then(value => {
+                connect(value.lobbyId)
+                this.router.push('/lobby?lobbyId=' + value.lobbyId);
+            })
         }
     }
 

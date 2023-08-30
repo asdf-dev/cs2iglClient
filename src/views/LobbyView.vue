@@ -1,44 +1,59 @@
 <template>
   <div class="lobby">
-    This is the lobby component.
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    only render this if you're IGL
-    IGL todo:
-    <li>
-      Listener til players håndteres med events
-    </li>
-    <li>
-      Listener til smokes valgt - fjerner allerde valgte smokes
-    </li>
-    <li>
-      list of smokes (remove used) regex + cahce
-    </li>
-    <li>
-      picture comp
-    </li>
-    <li>
-      player view
-    </li>
-    <IGL />
+    <div id="myview" class="flex-container">
+      <div style="padding-right: 10px;" id="left">
+        <Member />
+      </div>
+      <div id="right">
+        <SmokePic />
+      </div>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import IGL from "@/components/IGL.vue";
+import Member from "@/components/Member.vue";
+import SmokePic from '@/components/SmokePic.vue';
+import { useRouter } from "vue-router";
+import { connect } from '@/service/WSDataService';
+import router from '@/router';
+
 
 export default defineComponent({
   name: 'LobbyView',
   components: {
-    IGL
+    Member,
+    SmokePic
+  },
+  setup() {
+    const username = localStorage.getItem('username');
+    const lobbyId = useRouter().currentRoute.value.query.lobbyId?.toString();
+    const router = useRouter()
+
+    return {
+      username,
+      lobbyId,
+    }
   },
   mounted() {
-    console.log('hello from lobby');
+
+    // Check if the "username" key exists in local storage
+    if (!localStorage.getItem('username')) {
+      //username.value = localStorage.getItem('username');
+      console.error("missing username");
+      //show dialog or push to home
+      router.push('/')
+    }
+    if (this.lobbyId != null) {
+      connect(this.lobbyId)
+    }
   }
 });
 </script>
-<style></style>
+<style>
+.flex-container {
+  display: flex;
+  justify-content: left;
+}
+</style>

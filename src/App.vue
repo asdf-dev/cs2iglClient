@@ -2,12 +2,12 @@
   <nav class="nav-container">
     <div class="nav-content">
       <div v-if="isLobbyPath" id="lobbyCode">
-        <input readonly id="inputCode" value="Render lobby code" />
-        <button id="lobbyCopyBtn" @click="copyLobbyToClipboard">Copy</button>
+        <!-- <input readonly id="inputCode" :value="lobbyId" /> -->
+        <!-- <button id="lobbyCopyBtn" @click="copyLobbyToClipboard">Copy</button> -->
         <router-link class="navSpace" to="/">Home</router-link>
       </div>
       <div v-else id="createLobby">
-        <!-- <button id="CreateLobbyBtn" @click="createLobby()">CreateLobby</button> -->
+        <CreateLobby />
       </div>
     </div>
   </nav>
@@ -21,30 +21,38 @@
 import DialogBox from "./components/dialogBox.vue"
 import { ref, onMounted, computed } from "vue"
 import { useRoute } from 'vue-router';
+import CreateLobby from "./components/CreateLobby.vue";
 
 
 
 export default {
   components: {
-    DialogBox
+    DialogBox,
+    CreateLobby
   },
 
   setup() {
+    const lobbyId = ref()
     const dialogOpen = ref(false);
     const username = ref<string | null>(null);
     const route = useRoute();
+    const currentUrl = ref<string>('');
+
 
 
     onMounted(() => {
       // Check if the "username" key exists in local storage
       if (!localStorage.getItem('username')) {
         //username.value = localStorage.getItem('username');
-        console.log("missing username");
+        console.error("missing username");
         openDialog();
       }
     });
 
     const isLobbyPath = computed(() => {
+      if (route.path.includes('lobby')) {
+        lobbyId.value = `${window.location.origin}${route.fullPath}`;
+      }
       return route.path.includes('lobby');
     });
 
@@ -61,14 +69,11 @@ export default {
       openDialog,
       closeDialog,
       username,
-      isLobbyPath
+      isLobbyPath,
+      lobbyId
     };
   },
   methods: {
-
-    createLobby() {
-      console.log("creating lobby")
-    },
     showCreateLobby() {
       return false;
     },

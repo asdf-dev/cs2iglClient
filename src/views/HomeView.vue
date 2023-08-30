@@ -1,18 +1,20 @@
 <template>
   <div class="home">
-    this is home
-    <HelloWorld msg="this is msg" />
+    <JoinLobby />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import HelloWorld from '@/components/HelloWorld.vue'; // @ is an alias to /src
+import JoinLobby from '@/components/JoinLobby.vue';
+import Member from '@/components/Member.vue';
+
 
 export default defineComponent({
   name: 'HomeView',
   components: {
-    HelloWorld,
+    JoinLobby,
+    Member,
   },
 });
 </script>
