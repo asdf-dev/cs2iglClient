@@ -33,7 +33,8 @@ export async function createUser(name: string): Promise<User> {
     return response.data.data!;
   } catch (error: any) {
     console.error("Error creating user:", error);
-    throw error;
+    alert("Server failed to respond: " + error);
+    return error;
   }
 }
 
@@ -49,7 +50,8 @@ export async function createLobby(): Promise<lobby> {
     return response.data.data!;
   } catch (error: any) {
     console.error("Error creating lobby:", error);
-    throw error;
+    alert("Server failed to respond: " + error);
+    return error;
   }
 }
 export async function joinLobby(lobbyId: string): Promise<string> {
@@ -64,6 +66,7 @@ export async function joinLobby(lobbyId: string): Promise<string> {
     return response.data;
   } catch (error: any) {
     console.error("Error creating lobby:", error);
-    throw error;
+    alert("Server failed to respond: " + error);
+    return error;
   }
 }

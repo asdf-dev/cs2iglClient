@@ -128,11 +128,15 @@ export default defineComponent({
       const members = Object.values(lobbyStore.lobby?.members as object);
       members.forEach(metaUser => {
         watch(() => metaUser.grenadeAssignment, (newVal, oldVal) => {
+          // if (metaUser.grenadeAssignment == newVal) {
+          if (metaUser.grenadeAssignment == newVal) {
+            return
+          }
           const assign = {
             userId: metaUser.user.id,
             assignment: {
               team: newVal.team,
-              description: newVal.place,
+              description: newVal.description,
               imageUrl: newVal.imageUrl,
               jumpthrow: newVal.jumpthrow
             },

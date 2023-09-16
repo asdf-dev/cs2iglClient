@@ -42,7 +42,6 @@ export default defineComponent({
             watch(() => lobbyStore.lobby?.members[this.userId!].grenadeAssignment, (newGrenadeAssignment, oldGrenadeAssignment) => {
                 if (newGrenadeAssignment?.imageUrl != null) {
                     this.imageRefactor(newGrenadeAssignment.imageUrl)
-                    console.debug("newGrenadeAssignment: ", newGrenadeAssignment)
                     this.givenGrenade = newGrenadeAssignment
                 }
             })
