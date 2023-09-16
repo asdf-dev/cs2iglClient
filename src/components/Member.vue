@@ -3,12 +3,16 @@
     <div id="MemberPlayerList">
       <ul class="no-margin no-padding">
         <li v-for="(metaUser, index) in lobbyStore.lobby?.members" :key="index">
-          <div> {{ metaUser.user.name }} </div>
           <div v-if="isIGL()">
-            <select style="max-width: 180px;" v-model="metaUser.grenadeAssignment" :id="metaUser.user.id">
+            <!-- {{ metaUser.user.name }}: {{ metaUser.grenadeAssignment?.description }} -->
+            {{ handleLongNames(metaUser.user.name) }}: {{ metaUser.grenadeAssignment?.description }}
+            <select style="max-width: 20px;" v-model="metaUser.grenadeAssignment" :id="metaUser.user.id">
               <option v-for="smoke in pickedSmokes" :key="smoke.imageUrl" :value="smoke">{{ smoke.description }}
               </option>
             </select>
+          </div>
+          <div v-else>
+            {{ handleLongNames(metaUser.user.name) }}: {{ metaUser.grenadeAssignment?.description }}
           </div>
         </li>
       </ul>
@@ -87,6 +91,12 @@ export default defineComponent({
   },
 
   methods: {
+    handleLongNames(name: string) {
+      if (name.length > 8) {
+        return name.substring(0, 8)
+      }
+      return name
+    },
 
     restSmokes() {
       const members = Object.values(lobbyStore.lobby?.members as object);
@@ -128,8 +138,7 @@ export default defineComponent({
       const members = Object.values(lobbyStore.lobby?.members as object);
       members.forEach(metaUser => {
         watch(() => metaUser.grenadeAssignment, (newVal, oldVal) => {
-          // if (metaUser.grenadeAssignment == newVal) {
-          if (metaUser.grenadeAssignment == newVal) {
+          if (oldVal?.imageUrl == newVal?.imageUrl) {
             return
           }
           const assign = {
