@@ -2,6 +2,7 @@
   <nav class="nav-container">
     <div class="nav-content">
       <div v-if="isLobbyPath" id="lobbyCode" style="padding: 10px;">
+        <button @click="reportBug">Report bug</button><span style="padding: 5px;" />
         <input readonly id="inputCode" :value="lobbyId" />
         <button id="lobbyCopyBtn" @click="copyLobbyToClipboard">Copy</button>
         <router-link class="navSpace" to="/">🏠</router-link>
@@ -64,6 +65,7 @@ export default {
     };
 
     return {
+      route,
       dialogOpen,
       openDialog,
       closeDialog,
@@ -73,7 +75,9 @@ export default {
     };
   },
   methods: {
-
+    reportBug() {
+      window.open("https://github.com/asdf-dev/cs2iglClient/issues/new/choose", '_blank');
+    },
     async copyLobbyToClipboard() {
       const inputCodeElement = document.querySelector<HTMLInputElement>('#inputCode');
       if (inputCodeElement) {
