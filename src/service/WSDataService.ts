@@ -1,6 +1,7 @@
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 import { lobbyStore } from "@/store/LobbyStore";
 import { GrenadeAssignment } from "@/model/GrenadeAssignment";
+import { Lobby } from "@/model/Lobby";
 
 let connection: HubConnection | null = null;
 
@@ -16,6 +17,13 @@ export const connect = async (lobbyId: string) => {
     console.debug(lobby);
     lobbyStore.setLobby(lobby);
   });
+
+  // connection.on(
+  //   "UserInfo",
+  //   (lobby: Lobby) => {
+  //     lobbyStore.setLobby(lobby);
+  //   }
+  // );
 
   connection.on(
     "GrenadeAssignmentsReceived",

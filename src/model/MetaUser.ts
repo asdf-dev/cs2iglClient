@@ -1,8 +1,7 @@
-import { User } from "./User";
 import { Grenade } from "./Grenade";
 
 export interface MetaUser {
   online: boolean;
-  user: User;
+  name: string;
   grenadeAssignment: Grenade | null;
 }
