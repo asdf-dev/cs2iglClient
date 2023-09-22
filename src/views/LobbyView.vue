@@ -18,6 +18,7 @@ import SmokePic from '@/components/SmokePic.vue';
 import { useRouter } from "vue-router";
 import { connect } from '@/service/WSDataService';
 import router from '@/router';
+import { joinLobby } from '@/service/dataService';
 
 
 export default defineComponent({
@@ -37,7 +38,6 @@ export default defineComponent({
     }
   },
   mounted() {
-
     // Check if the "username" key exists in local storage
     if (!localStorage.getItem('username')) {
       //username.value = localStorage.getItem('username');
@@ -46,6 +46,7 @@ export default defineComponent({
       router.push('/')
     }
     if (this.lobbyId != null) {
+      joinLobby(this.lobbyId)
       connect(this.lobbyId)
     }
   }

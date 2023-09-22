@@ -27,6 +27,7 @@ export default defineComponent({
         if (this.inputValue.length == 0) {
           return
         }
+        joinLobby(this.inputValue)
         this.router.push(`/lobby?lobbyId=${this.inputValue}`);
       } catch (error) {
         console.error(error)
