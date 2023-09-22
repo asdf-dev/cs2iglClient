@@ -15,19 +15,8 @@ export const lobbyStore = reactive<reactiveLobby>({
     this.lobby = newLobbyState;
   },
   SetGrenade(grenadeAssignments: GrenadeAssignment[]) {
-    console.debug("SetGrenade");
     if (this.lobby != null) {
-      console.debug("SetGrenade lobby not null");
       grenadeAssignments.forEach((grenadeAssignment) => {
-        console.debug("SetGrenade each");
-        console.debug(
-          "SetGrenade grenadeAssignment.userId: ",
-          grenadeAssignment.userId
-        );
-        console.debug(
-          "SetGrenade grenadeAssignment.assignment:",
-          grenadeAssignment.assignment
-        );
         this.lobby!.members[grenadeAssignment.userId].grenadeAssignment =
           grenadeAssignment.assignment;
       });

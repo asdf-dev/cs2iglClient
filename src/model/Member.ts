@@ -1,5 +1,5 @@
 import { MetaUser } from "./MetaUser";
 
-export interface Members {
+export interface Member {
   [id: string]: MetaUser;
 }

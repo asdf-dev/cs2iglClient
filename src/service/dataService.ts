@@ -1,5 +1,7 @@
-import { User, lobby } from "@/model/User";
+import { createLobby } from "@/model/createLobby";
+
 import { ServiceResponse } from "@/model/ServiceResponse";
+import { User } from "@/model/User";
 import axios, { AxiosResponse, AxiosError } from "axios";
 
 const REST_BASE_URL = process.env.VUE_APP_NADE_STATIC_BASE_URL;
@@ -38,9 +40,9 @@ export async function createUser(name: string): Promise<User> {
   }
 }
 
-export async function createLobby(): Promise<lobby> {
+export async function createLobby(): Promise<createLobby> {
   try {
-    const response = await axios.post<ServiceResponse<lobby>>(
+    const response = await axios.post<ServiceResponse<createLobby>>(
       REST_BASE_URL + "/lobby",
       null,
       {

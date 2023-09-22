@@ -2,20 +2,26 @@
   <div id="Member" class="border">
     <div id="MemberPlayerList">
       <ul class="no-margin no-padding">
-        <li v-for="(metaUser, index) in lobbyStore.lobby?.members" :key="index">
-          <div> {{ metaUser.user.name }} </div>
+        <li v-for="(metaUser, id) in lobbyStore.lobby?.members" :key="(id)">
           <div v-if="isIGL()">
-            <select style="max-width: 180px;" v-model="metaUser.grenadeAssignment" :id="metaUser.user.id">
+            <div v-if="metaUser.online" style="display: inline;">
+              {{ handleLongNames(metaUser.name) }}: {{ metaUser.grenadeAssignment?.description }}
+            </div>
+            <select style="max-width: 20px;" v-model="metaUser.grenadeAssignment" :id="(id as string)">
               <option v-for="smoke in pickedSmokes" :key="smoke.imageUrl" :value="smoke">{{ smoke.description }}
               </option>
             </select>
+          </div>
+          <div v-else>
+            <div v-if="metaUser.online" style="display: inline;">
+              {{ handleLongNames(metaUser.name) }}: {{ metaUser.grenadeAssignment?.description }}
+            </div>
           </div>
         </li>
       </ul>
     </div>
     <br>
-    <!-- <div v-if="isIGL()"> -->
-    <div v-if="false">
+    <div v-if="isIGL()">
       <div> Select Map </div>
       <select style="max-width: 180px;" v-model="pickedMap">
         <option>Dust</option>
@@ -25,8 +31,8 @@
         <option>Vertigo</option>
       </select>
       <br>
+      <button @click="restSmokes()">Reset</button>
     </div>
-    <button @click="restSmokes()">Reset</button>
   </div>
 </template>
   
@@ -54,6 +60,12 @@ export default defineComponent({
       smokes: [
         //generated with pictureToJson script
         { map: "", team: "", jumpthrow: false, description: "Unassigned", imageUrl: "" }, //DO NOT REMOVE ME
+
+        //Dust
+
+        //Inferno
+
+        //Mirage
         { map: "Mirage", team: "T", jumpthrow: false, description: "a jungle", imageUrl: "maps/Mirage/T_false_a-jungle_1.jpg" },
         { map: "Mirage", team: "T", jumpthrow: true, description: "a ct spawn", imageUrl: "maps/Mirage/T_true_a-ct-spawn_1.jpg" },
         { map: "Mirage", team: "T", jumpthrow: false, description: "a stairs", imageUrl: "maps/Mirage/T_false_a-stairs_1.jpg" },
@@ -66,17 +78,19 @@ export default defineComponent({
         { map: "Mirage", team: "T", jumpthrow: false, description: "b default", imageUrl: "maps/Mirage/T_false_b-default_1.jpg" },
         { map: "Mirage", team: "T", jumpthrow: false, description: "b right arch", imageUrl: "maps/Mirage/T_false_b-right-arch_1.jpg" },
         { map: "Mirage", team: "T", jumpthrow: true, description: "b window", imageUrl: "maps/Mirage/T_true_b-window_1.jpg" },
+
+        //Nuke
+
+        //vertigo
       ],
     };
   },
   created() {
     //default
     this.pickSmoke('Mirage')
-    if (this.isIGL()) {
-      watch(() => this.pickedMap, (newVal, oldVal) => {
-        this.pickSmoke(newVal)
-      })
-    }
+    watch(() => this.pickedMap, (newVal, oldVal) => {
+      this.pickSmoke(newVal)
+    })
 
     watch(() => lobbyStore.lobby, (newVal, oldVal) => {
       if (newVal == null) {
@@ -87,22 +101,29 @@ export default defineComponent({
   },
 
   methods: {
+    handleLongNames(name: string) {
+      if (name.length > 8) {
+        return name.substring(0, 8)
+      }
+      return name
+    },
 
     restSmokes() {
-      const members = Object.values(lobbyStore.lobby?.members as object);
       let assigns: GrenadeAssignment[] = []
-      members.forEach(metaUser => {
-        assigns.push({
-          userId: metaUser.user.id,
-          assignment: {
-            team: '',
-            description: '',
-            imageUrl: '',
-            jumpthrow: false
-          },
-        })
-      })
-      distributeGrenades(assigns)
+      for (const memberId in lobbyStore.lobby?.members) {
+        if (Object.prototype.hasOwnProperty.call(lobbyStore?.lobby?.members, memberId)) {
+          assigns.push({
+            userId: memberId,
+            assignment: {
+              team: '',
+              description: 'Unassigned',
+              imageUrl: '',
+              jumpthrow: false
+            },
+          })
+        }
+        distributeGrenades(assigns)
+      }
     },
 
     pickSmoke(compareTo: String) {
@@ -125,25 +146,26 @@ export default defineComponent({
       if (lobbyStore.lobby == null) {
         return;
       }
-      const members = Object.values(lobbyStore.lobby?.members as object);
-      members.forEach(metaUser => {
-        watch(() => metaUser.grenadeAssignment, (newVal, oldVal) => {
-          // if (metaUser.grenadeAssignment == newVal) {
-          if (metaUser.grenadeAssignment == newVal) {
-            return
-          }
-          const assign = {
-            userId: metaUser.user.id,
-            assignment: {
-              team: newVal.team,
-              description: newVal.description,
-              imageUrl: newVal.imageUrl,
-              jumpthrow: newVal.jumpthrow
-            },
-          } as GrenadeAssignment
-          distributeGrenades([assign])
-        });
-      });
+      for (const memberId in lobbyStore.lobby?.members) {
+        if (Object.prototype.hasOwnProperty.call(lobbyStore.lobby.members, memberId)) {
+          const member = lobbyStore.lobby.members[memberId]
+          watch(() => member.grenadeAssignment, (newVal, oldVal) => {
+            if (oldVal?.imageUrl == newVal?.imageUrl) {
+              return
+            }
+            const assign = {
+              userId: memberId,
+              assignment: {
+                team: newVal?.team,
+                description: newVal?.description,
+                imageUrl: newVal?.imageUrl,
+                jumpthrow: newVal?.jumpthrow
+              },
+            } as GrenadeAssignment
+            distributeGrenades([assign])
+          })
+        }
+      }
     }
   }
 });

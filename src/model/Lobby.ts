@@ -1,9 +1,8 @@
-import { Members } from "./Members";
+import { Member } from "./Member";
 
 export interface Lobby {
   id: string;
   creator: string;
   inGameLeader: string;
-  members: Members;
-  createdTime: string;
+  members: Member;
 }
