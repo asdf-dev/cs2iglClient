@@ -2,15 +2,15 @@
   <div id="Member" class="border">
     <div id="MemberPlayerList">
       <ul class="no-margin no-padding">
-        <li v-for="(metaUser, id) in lobbyStore.lobby?.members" :key="(id)">
+        <li v-for="(metaUser, id) in LocallobbyStore.lobby?.members" :key="(id)">
           <div v-if="isIGL()">
             <div v-if="metaUser.online" style="display: inline;">
               {{ handleLongNames(metaUser.name) }}: {{ metaUser.grenadeAssignment?.description }}
+              <select style="max-width: 20px;" v-model="metaUser.grenadeAssignment" :id="(id as string)">
+                <option v-for="smoke in pickedSmokes" :key="smoke.imageUrl" :value="smoke">{{ smoke.description }}
+                </option>
+              </select>
             </div>
-            <select style="max-width: 20px;" v-model="metaUser.grenadeAssignment" :id="(id as string)">
-              <option v-for="smoke in pickedSmokes" :key="smoke.imageUrl" :value="smoke">{{ smoke.description }}
-              </option>
-            </select>
           </div>
           <div v-else>
             <div v-if="metaUser.online" style="display: inline;">
@@ -41,16 +41,19 @@ import { distributeGrenades } from "@/service/WSDataService";
 import { lobbyStore, reactiveLobby } from "@/store/LobbyStore";
 import { GrenadeAssignment } from '@/model/GrenadeAssignment';
 import { Smoke } from '@/model/Smoke';
+import { MetaUser } from '@/model/MetaUser';
 
 export default defineComponent({
 
   setup() {
     const pickedSmokes = ref<Smoke[]>([])
     const pickedMap = ref('Mirage')
+    const knownIds = ref<string[]>([]);
     return {
-      lobbyStore: ref<reactiveLobby>(lobbyStore),
+      LocallobbyStore: ref<reactiveLobby>(lobbyStore),
       pickedSmokes,
-      pickedMap
+      pickedMap,
+      knownIds
     }
   },
   data() {
@@ -94,19 +97,17 @@ export default defineComponent({
     };
   },
   created() {
-    //default
     this.pickSmoke('Mirage')
     watch(() => this.pickedMap, (newVal, oldVal) => {
       this.pickSmoke(newVal)
     })
-
-    watch(() => lobbyStore.lobby, (newVal, oldVal) => {
-      console.log("watch lobby:", newVal)
+    watch(() => lobbyStore.lobby?.members, (newVal, oldVal) => {
+      console.log("watch lobby:")
       if (newVal == null) {
         return
       }
-      this.distributeGrenadeWatcher();
     })
+    this.updateWatcher();
   },
 
   methods: {
@@ -146,37 +147,43 @@ export default defineComponent({
 
     },
 
+
+    updateWatcher() {
+      watch(() => lobbyStore.update, (newval, oldval) => {
+        if (lobbyStore.lobby == null) {
+          return
+        }
+        for (const memberId in lobbyStore.lobby!.members) {
+          if (lobbyStore.lobby.members.hasOwnProperty(memberId)) {
+            const metaUser: MetaUser = lobbyStore.lobby.members[memberId];
+            if (!this.knownIds.includes(memberId)) {
+              this.knownIds.push(memberId);
+              watch(() => lobbyStore.lobby?.members[memberId].grenadeAssignment, (newVal, oldVal) => {
+                if (oldVal?.imageUrl == newVal?.imageUrl) {
+                  return
+                }
+                const assign = {
+                  userId: memberId,
+                  assignment: {
+                    team: newVal?.team,
+                    description: newVal?.description,
+                    imageUrl: newVal?.imageUrl,
+                    jumpthrow: newVal?.jumpthrow
+                  },
+                } as GrenadeAssignment
+                distributeGrenades([assign])
+              })
+            }
+          }
+        }
+      })
+    },
+
     isIGL() {
       //BE should controll this
       return lobbyStore.lobby?.creator == localStorage.getItem("id");
     },
-
-    distributeGrenadeWatcher() {
-      if (lobbyStore.lobby == null) {
-        return;
-      }
-      for (const memberId in lobbyStore.lobby?.members) {
-        if (Object.prototype.hasOwnProperty.call(lobbyStore.lobby.members, memberId)) {
-          const member = lobbyStore.lobby.members[memberId]
-          watch(() => member.grenadeAssignment, (newVal, oldVal) => {
-            if (oldVal?.imageUrl == newVal?.imageUrl) {
-              return
-            }
-            const assign = {
-              userId: memberId,
-              assignment: {
-                team: newVal?.team,
-                description: newVal?.description,
-                imageUrl: newVal?.imageUrl,
-                jumpthrow: newVal?.jumpthrow
-              },
-            } as GrenadeAssignment
-            distributeGrenades([assign])
-          })
-        }
-      }
-    }
-  }
+  },
 });
 </script>
 <style scoped>

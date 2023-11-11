@@ -5,6 +5,7 @@ import { reactive } from "vue";
 
 export interface reactiveLobby {
   lobby: Lobby | null;
+  update: number;
   SetGrenade: (grenadeAssignments: GrenadeAssignment[]) => void;
   setLobby: (lobby: Lobby | null) => void;
   setMember: (user: User) => void;
@@ -12,6 +13,7 @@ export interface reactiveLobby {
 
 export const lobbyStore = reactive<reactiveLobby>({
   lobby: null,
+  update: 0,
 
   setLobby(newLobbyState) {
     this.lobby = newLobbyState;
@@ -24,15 +26,16 @@ export const lobbyStore = reactive<reactiveLobby>({
       });
     }
   },
+
   setMember(user) {
     if(this.lobby == null){
       return
     }
-    for (const memberId in this.lobby?.members) {
-      if (Object.prototype.hasOwnProperty.call(this.lobby.members, memberId)) {
-        const member = this.lobby.members[memberId]
-        member.online = user.online
-      }
-    }
+    (this.lobby.members as any)[user.id] = {
+      online: user.online,
+      name: user.name,
+      grenadeAssignment: null,
+    };
+    this.update = Object.keys(this.lobby.members).length
   },
 });
