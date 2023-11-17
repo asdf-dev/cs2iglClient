@@ -56,6 +56,7 @@ import { lobbyStore, reactiveLobby } from "@/store/LobbyStore";
 import { GrenadeAssignment } from '@/model/GrenadeAssignment';
 import { Smoke } from '@/model/Smoke';
 import { Grenade } from '@/model/Grenade';
+import { closeConnection } from '@/service/WSDataService';
 
 export default defineComponent({
 
@@ -241,6 +242,9 @@ export default defineComponent({
 
   mounted() {
     this.addToKnownUsers()
+  },
+  unmounted() {
+    closeConnection();
   },
 
   methods: {

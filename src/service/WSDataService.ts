@@ -6,6 +6,7 @@ import { User } from "@/model/User";
 
 let connection: HubConnection | null = null;
 
+
 export const connect = async (lobbyId: string) => {
   const baseUrl = process.env.VUE_APP_WS_STATIC_BASE_URL;
   const connectionUrl = `${baseUrl}/LobbyHub?lobbyId=${lobbyId
@@ -48,6 +49,16 @@ export const distributeGrenades = (grenadeAssignment: GrenadeAssignment[]) => {
       .catch((error: any) => {
         console.error("Error sending message:", error);
       });
+  } else {
+    console.error("Connection is not established.");
+  }
+};
+
+export const closeConnection = () => {
+  if (connection && connection.state === "Connected") {
+    connection.stop();
+    connection = null;
+    console.debug("Connection closed");
   } else {
     console.error("Connection is not established.");
   }
