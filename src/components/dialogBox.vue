@@ -8,6 +8,7 @@
 </template>
   
 <script lang="ts">
+import { CookieService } from '@/service/CookieService';
 import { createUser } from '@/service/dataService';
 import { ref, watch } from 'vue';
 
@@ -18,6 +19,7 @@ export default {
     setup(props: any) {
         const inputValue = ref('');
         const dialogVisible = ref(props.isOpen);
+        const cookieService = new CookieService();
 
         watch(() => props.isOpen, (newValue) => {
             dialogVisible.value = newValue;
@@ -28,6 +30,7 @@ export default {
             resp.then(value => {
                 localStorage.setItem('id', value.id);
                 localStorage.setItem('username', value.name);
+                cookieService.createValidCookie();
             })
             dialogVisible.value = false;
         };

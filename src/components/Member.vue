@@ -61,6 +61,7 @@ import { aExecuteSmokes } from '@/model/smokes/aExecuteSmokes'
 import { bExecuteSmokes } from '@/model/smokes/bExecuteSmokes'
 import { midExecuteSmokes } from '@/model/smokes/midExecuteSmokes'
 import { AllSmokes } from '@/model/smokes/allSmokes'
+import { CookieService } from '@/service/CookieService';
 
 export default defineComponent({
 
@@ -68,11 +69,13 @@ export default defineComponent({
     const pickedSmokes = ref<Smoke[]>([])
     const pickedMap = ref('Mirage')
     const knownIds = ref<string[]>([]);
+    const cookieService = new CookieService();
     return {
       LocallobbyStore: ref<reactiveLobby>(lobbyStore),
       pickedSmokes,
       pickedMap,
-      knownIds
+      knownIds,
+      cookieService,
     }
   },
   data() {
@@ -106,6 +109,7 @@ export default defineComponent({
   },
 
   mounted() {
+    this.cookieService.cookieValidator();
     this.addToKnownUsers()
   },
   unmounted() {
