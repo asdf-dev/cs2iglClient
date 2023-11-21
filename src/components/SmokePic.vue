@@ -1,7 +1,7 @@
 <template>
     <div id="smokePic">
         <div>
-            <div v-if="imageUrl2">
+            <div class="container" v-if="imageUrl2">
                 <div class="centered" style="font-size: large; padding-left: 5px; padding-right: 5px;">
                     {{ givenGrenade?.description }}
                     <br>
@@ -66,7 +66,7 @@ export default defineComponent({
 
 .centered {
     position: absolute;
-    top: 80%;
+    top: 85%;
     left: 50%;
     background-color: rgba(0, 0, 0, 0.596);
     transform: translate(-50%, -50%);
