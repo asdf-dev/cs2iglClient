@@ -16,14 +16,12 @@ export const connect = async (lobbyId: string) => {
   connection = new HubConnectionBuilder().withUrl(connectionUrl).build();
 
   connection.on("Lobby", (lobby: any) => {
-    console.debug(lobby);
     lobbyStore.setLobby(lobby);
   });
 
   connection.on(
     "UserInfo",
     (user: User) => {
-      console.debug("userinfo", user)
       lobbyStore.setMember(user)
     }
   );
@@ -35,15 +33,11 @@ export const connect = async (lobbyId: string) => {
     }
   );
 
-  console.debug("connecting");
   await connection.start();
-  console.debug("connected to", lobbyId);
 };
 
 export const distributeGrenades = (grenadeAssignment: GrenadeAssignment[]) => {
   if (connection && connection.state === "Connected") {
-    console.debug("distributeGrenades", grenadeAssignment);
-
     connection
       .invoke("DistributeGrenades", grenadeAssignment)
       .catch((error: any) => {
@@ -58,7 +52,6 @@ export const closeConnection = () => {
   if (connection && connection.state === "Connected") {
     connection.stop();
     connection = null;
-    console.debug("Connection closed");
   } else {
     console.error("Connection is not established.");
   }

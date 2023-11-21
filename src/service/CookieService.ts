@@ -4,7 +4,6 @@ import { createUser } from "./dataService";
 export class CookieService {
 
     createValidCookie() {
-        console.debug("creating cookie")
         const date = new Date();
         date.setTime(date.getTime() + (5 * 24 * 60 * 60 * 1000)); // Set expiry date to 5 days from now
         const expires = `expires=${date.toUTCString()}`;
@@ -40,7 +39,6 @@ export class CookieService {
     cookieValidator() {
         const cookie = this.getValidCookie()
         if (cookie == null) {
-            console.debug("cookie was null")
             const username = localStorage.getItem('username');
             if (username == null) {
                 const router = useRouter();

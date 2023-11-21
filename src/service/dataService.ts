@@ -19,7 +19,6 @@ export async function fetchData(): Promise<string> {
 }
 
 export async function createUser(name: string): Promise<User> {
-  console.debug("creating user")
   const requestBody = {
     name: name,
   };

@@ -155,7 +155,6 @@ export default defineComponent({
 
     aExecuteBtn(map: string) {
       //lige nu har vi kun mirage.. På sigt rename Amirage til AExecute. Temp list filter på mapnavn
-      console.log("a")
       let filtered = this.aExecute.filter( item => item.map == map)
       this.executeHandler(filtered)
     },
