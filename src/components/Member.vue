@@ -69,13 +69,11 @@ export default defineComponent({
     const pickedSmokes = ref<Smoke[]>([])
     const pickedMap = ref('Mirage')
     const knownIds = ref<string[]>([]);
-    const cookieService = new CookieService();
     return {
       LocallobbyStore: ref<reactiveLobby>(lobbyStore),
       pickedSmokes,
       pickedMap,
       knownIds,
-      cookieService,
     }
   },
   data() {
@@ -109,7 +107,6 @@ export default defineComponent({
   },
 
   mounted() {
-    this.cookieService.cookieValidator();
     this.addToKnownUsers()
   },
   unmounted() {

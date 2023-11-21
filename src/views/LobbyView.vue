@@ -19,6 +19,7 @@ import { useRouter } from "vue-router";
 import { connect } from '@/service/WSDataService';
 import router from '@/router';
 import { joinLobby } from '@/service/dataService';
+import { CookieService } from '@/service/CookieService';
 
 
 export default defineComponent({
@@ -31,13 +32,15 @@ export default defineComponent({
     const username = localStorage.getItem('username');
     const lobbyId = useRouter().currentRoute.value.query.lobbyId?.toString();
     const router = useRouter()
-
+    const cookieService = new CookieService();
     return {
       username,
       lobbyId,
+      cookieService
     }
   },
   mounted() {
+    this.cookieService.cookieValidator();
     // Check if the "username" key exists in local storage
     if (!localStorage.getItem('username')) {
       //username.value = localStorage.getItem('username');

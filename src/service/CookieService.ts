@@ -1,5 +1,6 @@
 import { useRouter } from "vue-router";
 import { createUser } from "./dataService";
+import { closeConnection } from "./WSDataService";
 
 export class CookieService {
 
@@ -47,6 +48,7 @@ export class CookieService {
             }
             const resp = createUser(username)
             resp.then(value => {
+                closeConnection(); //close should it exist
                 localStorage.setItem('id', value.id);
                 localStorage.setItem('username', value.name);
                 this.createValidCookie()
