@@ -23,18 +23,28 @@ export class CookieService {
             }
             if (cookie.indexOf(name) === 0) {
                 const value = cookie.substring(name.length);
-                return value; 
+                return value;
             }
         }
-        return null; 
+        return null;
     }
 
-     isCookieValid() {
+    isCookieValid() {
         const validCookie = this.getValidCookie();
         if (validCookie) {
             return true;
         }
-        return false; 
+        return false;
+    }
+
+    setCookie(key: string, value: string, expireDate?: Date) {
+        if (expireDate == undefined) {
+            const date = new Date();
+            date.setFullYear(date.getFullYear() + 5);
+            expireDate = date
+        }
+        const expires = `expires=${expireDate.toUTCString()}`;
+        document.cookie = `${key}=${value}; ${expires}; path=/`;
     }
 
     cookieValidator() {

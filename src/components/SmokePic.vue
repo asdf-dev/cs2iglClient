@@ -2,16 +2,23 @@
     <div id="smokePic">
         <div>
             <div class="container" v-if="imageUrl2">
-                <div class="centered" style="font-size: large; padding-left: 5px; padding-right: 5px;">
-                    {{ givenGrenade?.description }}
-                    <br>
-                    <div id="smokepicJumpthrow" v-if="givenGrenade?.jumpthrow">
-                        <b>Jumpthrow</b>
+                <div id="imageScaleDiv" :style="{ transform: `scale(${imageScalingFactor})` }">
+                    <div class="centered" style="font-size: large; padding-left: 5px; padding-right: 5px;">
+                        {{ givenGrenade?.description }}
+                        <br>
+                        <div id="smokepicJumpthrow" v-if="givenGrenade?.jumpthrow">
+                            <b>Jumpthrow</b>
+                        </div>
                     </div>
+                    <img v-if="!showHoverImage" :src="imageUrl2" @mouseover="showHoverImage = true"
+                        style="width: 1050px; height: 820px;" />
+                    <img v-else :src="imageUrl1" @mouseout="showHoverImage = false" style="width: 1050px; height: 820px;" />
+                    <br>
+                    <span class="clickable-text" @click="imageScale(0.5)">50</span> /
+                    <span class="clickable-text" @click="imageScale(0.7)">70</span> /
+                    <span class="clickable-text" @click="imageScale(0.9)">90</span> /
+                    <span class="clickable-text" @click="imageScale(1)">100</span>
                 </div>
-                <img v-if="!showHoverImage" :src="imageUrl2" @mouseover="showHoverImage = true"
-                    style="width: 1050px; height: 820px;" />
-                <img v-else :src="imageUrl1" @mouseout="showHoverImage = false" style="width: 1050px; height: 820px;" />
             </div>
             <div v-else style="width: 1050px; height: 820px;">
                 <h1>waiting for IGL</h1>
@@ -29,14 +36,20 @@ import { Grenade } from '@/model/Grenade';
 export default defineComponent({
 
     setup() {
+        const imageScalingFactor: number = 1;
         const imageUrl1 = ref('')
         const imageUrl2 = ref('')
         const userId = localStorage.getItem("id")
         const somePicture = ref<string>('');
         const showHoverImage = ref(false);
         const givenGrenade = ref<Grenade>()
-        return { showHoverImage, somePicture, lobby: ref<reactiveLobby>(lobbyStore), userId, imageUrl1, imageUrl2, givenGrenade }
+        return { showHoverImage, somePicture, lobby: ref<reactiveLobby>(lobbyStore), userId, imageUrl1, imageUrl2, givenGrenade, imageScalingFactor }
     },
+
+    mounted() {
+        this.imageScalingFactor = this.getStoredImageScale();
+    },
+
     created() {
         watch(() => lobbyStore.lobby, (newVal, oldVal) => {
             watch(() => lobbyStore.lobby?.members[this.userId!].grenadeAssignment, (newGrenadeAssignment, oldGrenadeAssignment) => {
@@ -53,6 +66,21 @@ export default defineComponent({
             // eg: T_false_smoke-ct-fra-tetris_1
             this.imageUrl1 = imageUrl
             this.imageUrl2 = imageUrl.replace('1', '2')
+        },
+        
+        imageScale(scale: number) {
+            localStorage.setItem('imageScalingFactor', scale.toString())
+            this.imageScalingFactor = scale
+
+            //update view
+            const divToScale = document.getElementById('imageScaleDiv');
+            if (divToScale) {
+                divToScale.style.transform = `scale(${scale})`;
+            }
+        },
+
+        getStoredImageScale(): number {
+            return parseFloat(localStorage.getItem('imageScalingFactor') || '1')
         }
     },
 });
