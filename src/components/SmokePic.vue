@@ -21,7 +21,7 @@
                 </div>
             </div>
             <div v-else style="width: 1050px; height: 820px;">
-                <h1>waiting for IGL</h1>
+                <h1>Waiting for IGL</h1>
             </div>
         </div>
     </div>
