@@ -152,15 +152,15 @@ export default defineComponent({
 
     aExecuteBtn(map: string) {
       //lige nu har vi kun mirage.. På sigt rename Amirage til AExecute. Temp list filter på mapnavn
-      let filtered = this.aExecute.filter( item => item.map == map)
+      let filtered = this.aExecute.filter(item => item.map == map)
       this.executeHandler(filtered)
     },
     bExecuteBtn(map: string) {
-      let filtered = this.bExecute.filter( item => item.map == map)
+      let filtered = this.bExecute.filter(item => item.map == map)
       this.executeHandler(filtered)
     },
     midExecuteBtn(map: string) {
-      let filtered = this.midExecute.filter( item => item.map == map)
+      let filtered = this.midExecute.filter(item => item.map == map)
       this.executeHandler(filtered)
     },
     doesExecuteExist(map: string): boolean {

@@ -67,7 +67,7 @@ export default defineComponent({
             this.imageUrl1 = imageUrl
             this.imageUrl2 = imageUrl.replace('1', '2')
         },
-        
+
         imageScale(scale: number) {
             localStorage.setItem('imageScalingFactor', scale.toString())
             this.imageScalingFactor = scale
