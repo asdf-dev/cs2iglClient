@@ -1,4 +1,8 @@
 <template>
+  <form action="https://www.faceitfinder.com/" style="float:right">
+    <input type="submit" value="FaceitFinder" />
+  </form>
+  <br>
   <nav class="nav-container">
     <div class="nav-content">
       <div v-if="isLobbyPath" id="lobbyCode" style="padding: 10px;">
