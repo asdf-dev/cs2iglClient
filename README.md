@@ -1,5 +1,8 @@
 # smoke-socket-client
 
+# This project is no longer supported by a backend 
+
+
 ## Project setup
 
 ```
